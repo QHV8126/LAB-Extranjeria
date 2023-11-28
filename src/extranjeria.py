@@ -8,8 +8,8 @@ def lee_datos_extranjeria(ruta_fichero):
     with open(ruta_fichero, encoding = 'utf-8') as f:
         lector = csv.reader(f)
         next(lector)
-        res = [RegistroExtranjeria(int(distrito.strip()),int(seccion.strip()),
-            barrio.strip(),pais.strip(),int(hombres.strip()),int(mujeres.strip())) 
+        res = [RegistroExtranjeria(distrito,seccion,
+            barrio,pais,int(hombres),int(mujeres)) 
             for distrito,seccion,barrio,pais,hombres,mujeres in lector]
     return res
 
@@ -18,9 +18,10 @@ def numero_nacionalidades_distintas(registros):
     return len(res)
 
 def secciones_distritos_con_extranjeros_nacionalidades(registros, paises):
-    res = [(distrito,seccion) for distrito,seccion,_,pais,_,_ in registros
-         if pais in paises]
-    return sorted(res)
+    res = (None,None)
+    res = {(distrito,seccion) for distrito,seccion,_,pais,_,_ in registros
+         if pais in paises and (distrito,seccion) not in res}
+    return sorted(list(res))
 
 def total_extranjeros_por_pais(registros):
     res = defaultdict(int)
@@ -38,9 +39,9 @@ def top_n_extranjeria(registros, n=3):
 def barrio_mas_multicultural(registros):
     res = defaultdict(set)
     for _,_,barrio,pais,_,_ in registros:
-        res[barrio].update(pais)
-    res = sorted(res, key = lambda x:len(x[1]))
-    return res[0]
+        res[barrio].add(pais)
+    res = sorted(res.items(), key=lambda x: len(x[1]), reverse=True)
+    return res[0][0]
 
 def barrio_con_mas_extranjeros(registros, tipo=None):
     res = defaultdict(int)
@@ -51,17 +52,16 @@ def barrio_con_mas_extranjeros(registros, tipo=None):
             res[barrio] += hombres
         if tipo == 'MUJERES':
             res[barrio] += mujeres
-    res = sorted(res, key = lambda x:len(x[1]))
-    return res[0]
+    res = sorted(res.items(), key=lambda x: x[1], reverse=True)
+    return res[0][0]
 
 def pais_mas_representado_por_distrito(registros):
-    res = defaultdict(str)
-    for distrito,seccion,barrio,pais,hombres,mujeres in registros:
-        res[distrito] = pais_con_mas_extranjeros_residentes
-    dicc = defaultdict(int)
     distrito_pais = list()
     for distrito_filtro in {distrito for distrito,_,_,_,_,_ in registros}:
-        for distrito,seccion,barrio,pais,hombres,mujeres in registros:
-            dicc[pais] += hombres+mujeres
-        dicc = sorted(dicc, key=lambda x:x[1])
-        distrito_paisa.append((distrito_filtro, ))
+        dicc = defaultdict(int)
+        for distrito,_,_,pais,hombres,mujeres in registros:
+            if distrito == distrito_filtro:
+                dicc[pais] += hombres+mujeres
+        dicc = sorted(dicc.items(), key=lambda x:x[1], reverse=True)
+        distrito_pais.append((distrito_filtro, dicc[0][0]))
+    return {distrito:pais for distrito,pais in distrito_pais}

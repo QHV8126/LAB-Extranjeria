@@ -26,6 +26,7 @@ if __name__ == "__main__":
     print("\nTEST DE LA FUNCIÓN secciones_distritos_con_extranjeros_nacionalidades:")
     paises = {"ALEMANIA", "ITALIA"}
     distritos_secciones = secciones_distritos_con_extranjeros_nacionalidades(registros, paises)
+    print(secciones_distritos_con_extranjeros_nacionalidades(registros, paises))
     print(f"Hay {len(distritos_secciones)} secciones de distritos con residentes cuya procedencia es {paises}.")
     print("Mostrando 3 secciones:")
     print(distritos_secciones[:3])
@@ -49,17 +50,8 @@ if __name__ == "__main__":
     print(f"El barrio con más hombres residentes extranjeros es {barrio_con_mas_extranjeros(registros, 'HOMBRES')}")
     print(f"El barrio con más mujeres residentes extranjeras es {barrio_con_mas_extranjeros(registros, 'MUJERES')}")
 
-'''
     print("\nTEST DE LA FUNCIÓN pais_mas_representado_por_distrito:")
     distrito_pais = pais_mas_representado_por_distrito(registros)
     print("Los países con más residentes en cada distrito son los siguientes:")
     for distrito in sorted(distrito_pais):
         print(f"Distrito: {distrito:02} => {distrito_pais[distrito]}")
-
-
-
-
-
-    
-
-   '''
