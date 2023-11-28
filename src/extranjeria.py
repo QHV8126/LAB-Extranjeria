@@ -57,4 +57,11 @@ def barrio_con_mas_extranjeros(registros, tipo=None):
 def pais_mas_representado_por_distrito(registros):
     res = defaultdict(str)
     for distrito,seccion,barrio,pais,hombres,mujeres in registros:
-        res[distrito]
+        res[distrito] = pais_con_mas_extranjeros_residentes
+    dicc = defaultdict(int)
+    distrito_pais = list()
+    for distrito_filtro in {distrito for distrito,_,_,_,_,_ in registros}:
+        for distrito,seccion,barrio,pais,hombres,mujeres in registros:
+            dicc[pais] += hombres+mujeres
+        dicc = sorted(dicc, key=lambda x:x[1])
+        distrito_paisa.append((distrito_filtro, ))
